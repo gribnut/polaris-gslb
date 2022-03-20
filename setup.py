@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 """Polaris setup
 
@@ -12,22 +12,21 @@ import inspect
 import shutil
 import setuptools
 
-
 VERSION = '0.6.0'
 
 
 def main():
-   # setup packages
+    # setup packages
     setuptools.setup(
         version=VERSION,
-        author='Anton Gavrik',    
+        author='Anton Gavrik',
         name='polaris-gslb',
         description=('An extendable Global Server Load Balancing(GSLB) '
                      'solution, DNS-based traffic manager.'),
-        packages = setuptools.find_packages('.'),
+        packages=setuptools.find_packages('.'),
         install_requires=[
             'pyyaml',
-            'python-memcached', 
+            'python-memcached',
             'python-daemon-3K'
         ],
         license='BSD 3-Clause',
@@ -48,24 +47,26 @@ def main():
     # determine the directory where setup.py is located
     pwd = os.path.abspath(
         os.path.split(inspect.getfile(inspect.currentframe()))[0])
- 
+
     print('Creating directory topology...')
-    for path in [ 
+    for path in [
         os.path.join(install_prefix, 'etc'),
         os.path.join(install_prefix, 'bin'),
-        os.path.join(install_prefix, 'run'),        
-            ]:
+        os.path.join(install_prefix, 'run'),
+        os.path.join(install_prefix, 'logs'),
+    ]:
         try:
             os.makedirs(path)
         except FileExistsError:
             continue
 
     print('Copying dist configuration and executables...')
-    for dirname in [ 'etc', 'bin' ]:
-        copy_files(os.path.join(pwd, dirname), 
+    for dirname in ['etc', 'bin']:
+        copy_files(os.path.join(pwd, dirname),
                    os.path.join(install_prefix, dirname))
 
-
+    print('Setting owner to to pdns:pdns...')
+    os.system("chown -R pdns:pdns "+install_prefix)
     print('Creating /etc/default/polaris...')
     py3_path = ''
     if not sys.executable:
@@ -78,17 +79,16 @@ def main():
         f.write('export PATH=$PATH:{}\n'.format(py3_path))
         f.write('export POLARIS_INSTALL_PREFIX={}\n'
                 .format(install_prefix))
-         
+
 
 def copy_files(src_dir, dst_dir):
-    """Copy all files from src_dir to dst_dir""" 
+    """Copy all files from src_dir to dst_dir"""
     src_files = os.listdir(src_dir)
     for file_name in src_files:
         full_file_name = os.path.join(src_dir, file_name)
-        if (os.path.isfile(full_file_name)):
+        if os.path.isfile(full_file_name):
             shutil.copy(full_file_name, dst_dir)
 
 
 if __name__ == '__main__':
     main()
-
