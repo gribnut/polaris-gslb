@@ -37,3 +37,7 @@ negquery-cache-ttl=0
 # query-cache-ttl=20
 query-cache-ttl=0
 
+#################################
+# Fix for PowerDNS >=4.5.1.
+# See https://github.com/polaris-gslb/polaris-gslb/issues/69
+zone-cache-refresh-interval=0
