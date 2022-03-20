@@ -19,8 +19,6 @@ yum install pdns pdns-backend-remote memcached git
 git clone https://github.com/gribnut/polaris-gslb.git
 cd polaris-gslb
 python3 setup.py install
-mv /etc/pdns/pdns.conf /etc/pdns/pdns.conf.orig
-cp /opt/polaris/etc/pdns.conf.dist /etc/pdns/pdns.conf
 ```
 
 The following files are created:
@@ -52,6 +50,7 @@ export POLARIS_INSTALL_PREFIX=/opt/polaris
 
 Install the Polaris-specific PDNS configuration file
 ```shell
+mv /etc/pdns/pdns.conf /etc/pdns/pdns.conf.orig
 cp /opt/polaris/etc/pdns.conf.dist /etc/pdns/pdns.conf
 ```
 
@@ -62,9 +61,21 @@ Copy /opt/polaris/etc/*.dist files into *.yaml or create new ones and configure:
 - polaris-health.yaml - Polaris health general parameters
 - polaris-pdns.yaml - Polaris PDNS general parameters
 
-Start pdns
+Start memcached and pdns
+```shell
+systemctl enable memcached
+systemctl start memcached
+systemctl enable pdns
+systemctl start pdnds
+```
 
-Use `/opt/polaris/bin/polaris-health [status|start|start-debug|stop|restart]` to control the Polaris health application.
+Install the polaris-health systemd unit file and start polaris-health service
+```shell
+cp /opt/polaris/etc/polaris-health.service /usr/lib/systemd/system/
+systemctl daemon-reload
+systemctl enable polaris-health
+systemctl start polaris-health
+```
 
 `/opt/polaris/bin/polaris-memcache-control 127.0.0.1 [get-generic-state|get-ppdns-state|get-heartbeat|check-heartbeat]` can be used to display various memcache values set by Polaris.
 * `get-ppdns-state` shows the state table used for query distribution
