@@ -10,9 +10,24 @@
 # LOG_LEVEL: info
 
 ################################
-# where to send logs to, one of "syslog", "datagram"(udp)
+# where to send logs to, one of "syslog", "file" or "datagram"(udp)
 #
 # LOG_HANDLER: syslog
+
+################################
+# Log file to use with file handler
+#
+# LOG_FILE: /opt/polaris/logs/polaris-health.log
+
+################################
+# Max log file size to use with file handler
+#
+# LOG_FILE_SIZE: 100000000
+
+################################
+# Number of log files to use with file handler rotation
+#
+# LOG_FILE_COUNT: 10
 
 ################################
 # hostname/ip to use with the datagram handler

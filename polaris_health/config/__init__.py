@@ -20,6 +20,9 @@ BASE = {
 
     'LOG_LEVEL': 'info',
     'LOG_HANDLER': 'syslog',
+    'LOG_FILE': '/opt/polaris/logs/polaris-health.log',
+    'LOG_FILE_SIZE': '10000000',
+    'LOG_FILE_COUNT': '3',
     'LOG_HOSTNAME': '127.0.0.1',
     'LOG_PORT': 2222,
 
@@ -34,4 +37,3 @@ BASE = {
 LB = {}
 
 TOPOLOGY_MAP = {}
-
